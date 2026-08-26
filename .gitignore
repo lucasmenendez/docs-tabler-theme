@@ -1,0 +1,15 @@
+# Build output (the action writes to _site/ by default)
+_site/
+.jekyll-cache/
+
+# Bundler
+.bundle/
+vendor/
+Gemfile.lock
+
+# Local preview workspace (serve.sh copies docs content here)
+.preview/
+
+# Editor / OS
+.DS_Store
+*.swp

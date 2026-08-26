@@ -1,0 +1,156 @@
+name: "Build Jekyll docs site (docs-tabler-theme)"
+description: >-
+  Builds a Jekyll site from a bare markdown content folder (recursive pages +
+  _nav/) using the docs-tabler-theme theme, and exposes the built static
+  files via the build-path output so a later step can deploy them (e.g. with
+  actions/upload-pages-artifact + actions/deploy-pages).
+
+inputs:
+  content-path:
+    description: >-
+      Path (relative to the repo root) to the folder containing the markdown
+      content. Subfolders are included recursively; an optional _nav/ folder
+      supplies the navbar dropdown links. Jekyll config and Gemfile are
+      generated automatically, so the folder only needs the content itself.
+    required: false
+    default: "."
+
+  checkout:
+    description: >-
+      Whether to run actions/checkout on the repository before building.
+      Defaults to true. Set to false when you have already checked out and
+      generated content before this step (e.g. generated swagger UI assets),
+      since the action's own checkout would clean away untracked files.
+    required: false
+    default: "true"
+
+  title:
+    description: "Site title shown in the navbar and <title>."
+    required: false
+    default: "Docs"
+
+  description:
+    description: "Site description used in the meta description."
+    required: false
+    default: ""
+
+  logo:
+    description: >-
+      Light-mode logo path relative to the built site root (e.g.
+      assets/images/logo.svg). Pairs with the optional `logo-dark` input.
+    required: false
+    default: ""
+
+  logo-dark:
+    description: >-
+      Dark-mode logo path relative to the built site root (e.g.
+      assets/images/logo-dark.svg). Optional; if omitted the light logo is
+      used in both modes. The swap follows the site's theme toggle.
+    required: false
+    default: ""
+
+  favicon:
+    description: >-
+      Favicon path relative to the built site root (e.g.
+      assets/images/favicon.ico). Optional; defaults to the theme's logo.svg.
+    required: false
+    default: ""
+
+  baseurl:
+    description: >-
+      Base URL for the site. For a GitHub Pages project site, pass the base
+      path output from the configure-pages step. Leave empty for
+      user/organization pages (username.github.io).
+    required: false
+    default: ""
+
+  theme-path:
+    description: >-
+      Local path to a checked-out copy of the theme gem (for testing or
+      self-hosting, e.g. "."). When empty, the action builds with its own
+      checked-out files (github.action_path), so the theme always matches the
+      action version.
+    required: false
+    default: ""
+
+  ruby-version:
+    description: "Ruby version to install for the build."
+    required: false
+    default: "3.1"
+
+  jekyll-version:
+    description: "Jekyll version constraint to install."
+    required: false
+    default: "~> 4.3"
+
+  output-path:
+    description: "Where the built site is written, relative to the repo root."
+    required: false
+    default: "_site"
+
+  config:
+    description: >-
+      Optional extra Jekyll config file (relative to the repo root) merged on
+      top of the generated one.
+    required: false
+    default: ""
+
+  static-path:
+    description: >-
+      Path (relative to the repo root) to static content to publish verbatim —
+      either a single file (e.g. a self-contained index.html) or a folder of
+      assets. Copied into the built site at static-dest, e.g. to serve a
+      generated swagger UI under /api/.
+    required: false
+    default: ""
+
+  static-dest:
+    description: >-
+      Target path inside the built site (e.g. api, served at /api/). Required
+      when static-path is set.
+    required: false
+    default: ""
+
+  trace:
+    description: "Pass --trace to jekyll for verbose build errors."
+    required: false
+    default: "false"
+
+outputs:
+  build-path:
+    description: "Absolute path to the built static site (for upload-pages-artifact)."
+    value: ${{ steps.build.outputs.build-path }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repository
+      if: ${{ inputs.checkout == 'true' }}
+      uses: actions/checkout@v7
+
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ inputs.ruby-version }}
+        bundler-cache: false
+
+    - name: Build Jekyll site
+      id: build
+      shell: bash
+      env:
+        CONTENT_PATH: ${{ inputs.content-path }}
+        SITE_TITLE: ${{ inputs.title }}
+        SITE_DESCRIPTION: ${{ inputs.description }}
+        SITE_LOGO: ${{ inputs.logo }}
+        SITE_LOGO_DARK: ${{ inputs.logo-dark }}
+        SITE_FAVICON: ${{ inputs.favicon }}
+        SITE_BASEURL: ${{ inputs.baseurl }}
+        THEME_PATH: ${{ inputs.theme-path || github.action_path }}
+        RUBY_VERSION: ${{ inputs.ruby-version }}
+        JEKYLL_VERSION: ${{ inputs.jekyll-version }}
+        OUTPUT_PATH: ${{ inputs.output-path }}
+        EXTRA_CONFIG: ${{ inputs.config }}
+        STATIC_PATH: ${{ inputs.static-path }}
+        STATIC_DEST: ${{ inputs.static-dest }}
+        JEKYLL_TRACE: ${{ inputs.trace }}
+      run: ${{ github.action_path }}/build.sh

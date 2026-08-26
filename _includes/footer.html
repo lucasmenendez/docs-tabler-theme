@@ -1,0 +1,22 @@
+<footer class="container-xl border-top py-4 mt-5 text-body-secondary">
+  {% assign footer_text = site.footer.text | default: site.footer.first.text | default: site.title %}
+  {% assign footer_links = site.footer.links | default: site.footer.first.links %}
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+    <div class="small">
+      {{ footer_text }}
+    </div>
+    {% if footer_links %}
+      <ul class="nav small">
+        {% for link in footer_links %}
+          <li class="nav-item">
+            {% if link.external or link.url contains "://" %}
+              <a class="nav-link px-2" href="{{ link.url }}" target="_blank" rel="noopener">{% if link.icon %}<i data-feather="{{ link.icon }}" aria-hidden="true"></i>{% endif %} {{ link.title }}{% unless link.icon %} <i data-feather="external-link" aria-hidden="true"></i>{% endunless %}</a>
+            {% else %}
+              <a class="nav-link px-2" href="{{ link.url | relative_url }}">{% if link.icon %}<i data-feather="{{ link.icon }}" aria-hidden="true"></i>{% endif %} {{ link.title }}</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</footer>

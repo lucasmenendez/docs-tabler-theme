@@ -1,0 +1,55 @@
+# Theme defaults for docs-tabler-theme.
+# Site-level _config.yml overrides these.
+
+title: Docs
+description: Documentation built with the docs-tabler-theme.
+
+# Logo paths relative to site root. Omit to show only the title.
+# `logo` is shown in light mode; `logo_dark` (optional) replaces it in dark
+# mode via the theme toggle. If logo_dark is omitted, logo is used in both.
+logo: assets/images/logo.svg
+logo_dark: assets/images/logo-dark.svg
+
+# Favicon path relative to site root (optional). Defaults to the theme's own
+# logo.svg, which ships with the gem; override to use your own file.
+favicon: assets/images/logo.svg
+
+# Footer text (optional). Supports a `links` list of {title, url, external}.
+footer:
+  text: Docs
+  links:
+    - title: Home
+      url: /
+    - title: API
+      url: /api/
+
+# Navigation collection: one Markdown file per navbar item.
+collections:
+  nav:
+    output: false
+  # Footer data: one optional Markdown file (_footer/footer.md) whose front
+  # matter (`text` + `links`) overrides the `footer:` config below. output
+  # false = readable as site.footer but never rendered as a page.
+  footer:
+    output: false
+
+defaults:
+  - scope:
+      path: ""
+      type: "nav"
+    values:
+      nav_level: 1
+      nav_order: 100
+  # Pages that opt into the navbar via nav_level get a safe sort value when
+  # they don't set nav_order (Liquid's sort errors on nil).
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      nav_order: 100
+
+# Tabler v1.4 is a Bootstrap 5.3-based kit; Jekyll serves the compiled CSS.
+exclude:
+  - "*.gemspec"
+  - Gemfile
+  - Gemfile.lock

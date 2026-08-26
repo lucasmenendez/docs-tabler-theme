@@ -1,0 +1,111 @@
+<header class="navbar navbar-expand-md fixed-top d-print-none" style="background-color: var(--tblr-bg-surface); border-bottom: var(--tblr-border-width) solid var(--tblr-border-color-translucent);">
+  <div class="container-xl">
+    <a class="navbar-brand d-flex align-items-center" href="{{ '/' | relative_url }}">
+      {% if site.logo %}
+        <img src="{{ site.logo | relative_url }}" alt="{{ site.title }}" width="24" height="24" class="navbar-logo navbar-logo-light me-2">
+      {% endif %}
+      {% if site.logo_dark %}
+        <img src="{{ site.logo_dark | relative_url }}" alt="{{ site.title }}" width="24" height="24" class="navbar-logo navbar-logo-dark me-2">
+      {% endif %}
+      <span class="fw-bold">{{ site.title }}</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-main" aria-controls="navbar-main" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbar-main">
+      {% comment %}
+        Nav items come from two sources, both using the same nav_* field names:
+        - _nav/*.md (site.nav collection) for custom/external links: nav_title, nav_href, nav_icon, nav_level, nav_parent, nav_order, nav_collapsed, nav_external.
+        - Content pages that set nav_level in front matter: they render in the nav and link to their own permalink (page.url).
+        Both are normalized below so the rendering is shared.
+      {% endcomment %}
+      {% assign page_nav = site.pages | where_exp: "p", "p.nav_level" %}
+      {% assign nav_items = site.nav | concat: page_nav | sort: "nav_order" %}
+      <ul class="navbar-nav mb-2 mb-md-0">
+        {% for item in nav_items %}
+          {% if item.collection == "nav" %}
+            {% assign item_url = item.nav_href %}
+          {% else %}
+            {% assign item_url = item.url %}
+          {% endif %}
+          {% assign item_title = item.nav_title | default: item.title %}
+          {% assign item_icon = item.nav_icon %}
+          {% assign item_level = item.nav_level %}
+          {% assign item_parent = item.nav_parent %}
+
+          {% if item_level != 1 %}{% continue %}{% endif %}
+
+          {% assign children = nav_items | where_exp: "c", "c.nav_level == 2 and c.nav_parent == item_title" | sort: "nav_order" %}
+
+          {% assign is_external = false %}
+          {% if item.nav_external or item_url contains "://" %}
+            {% assign is_external = true %}
+            {% assign href = item_url %}
+          {% else %}
+            {% assign href = item_url | relative_url %}
+          {% endif %}
+
+          {% assign nav_icon = item_icon %}
+          {% if nav_icon == nil or nav_icon == "" %}
+            {% if item_url %}
+              {% assign target = site.pages | where: "url", item_url | first %}
+              {% assign nav_icon = target.nav_icon %}
+            {% endif %}
+          {% endif %}
+
+          {% if children.size > 0 %}
+            <li class="nav-item dropdown{% if item.nav_collapsed %} collapsed{% endif %}">
+              {% if item_url %}
+                <a class="nav-link dropdown-toggle" href="{{ href }}" role="button" data-bs-toggle="dropdown" aria-expanded="false"{% if item.nav_collapsed %} aria-label="{{ item_title }}"{% endif %}>{% if nav_icon %}<i data-feather="{{ nav_icon }}" aria-hidden="true"></i>{% endif %}{% if item_title != empty %} <span class="nav-link-label">{{ item_title }}</span>{% endif %}</a>
+              {% else %}
+                <span class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"{% if item.nav_collapsed %} aria-label="{{ item_title }}"{% endif %}>{% if nav_icon %}<i data-feather="{{ nav_icon }}" aria-hidden="true"></i>{% endif %}{% if item_title != empty %} <span class="nav-link-label">{{ item_title }}</span>{% endif %}</span>
+              {% endif %}
+              <div class="dropdown-menu">
+                {% for child in children %}
+                  {% if child.collection == "nav" %}
+                    {% assign child_url = child.nav_href %}
+                  {% else %}
+                    {% assign child_url = child.url %}
+                  {% endif %}
+                  {% assign child_title = child.nav_title | default: child.title %}
+                  {% assign child_icon = child.nav_icon %}
+
+                  {% assign child_is_external = false %}
+                  {% if child.nav_external or child_url contains "://" %}
+                    {% assign child_is_external = true %}
+                  {% endif %}
+
+                  {% if child_url %}
+                    <a class="dropdown-item{% if page.url == child_url %} active{% endif %}{% if child.nav_collapsed %} collapsed{% endif %}" href="{{ child_url | relative_url }}"{% if child_is_external %} target="_blank" rel="noopener"{% endif %}{% if child.nav_collapsed %} aria-label="{{ child_title }}"{% endif %}>{% if child_icon %}<i data-feather="{{ child_icon }}" aria-hidden="true"></i>{% endif %}{% if child_title != empty %} <span class="nav-link-label">{{ child_title }}</span>{% endif %}{% if child_is_external %}{% unless child_icon %} <i data-feather="external-link" aria-hidden="true"></i>{% endunless %}{% endif %}</a>
+                  {% else %}
+                    <span class="dropdown-item{% if child.nav_collapsed %} collapsed{% endif %}"{% if child.nav_collapsed %} aria-label="{{ child_title }}"{% endif %}>{% if child_icon %}<i data-feather="{{ child_icon }}" aria-hidden="true"></i>{% endif %}{% if child_title != empty %} <span class="nav-link-label">{{ child_title }}</span>{% endif %}</span>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </li>
+          {% else %}
+            <li class="nav-item{% if item.nav_collapsed %} collapsed{% endif %}">
+              {% if item_url %}
+                <a class="nav-link{% if page.url == item_url %} active" aria-current="page{% endif %}" href="{{ href }}"{% if is_external %} target="_blank" rel="noopener"{% endif %}{% if item.nav_collapsed %} aria-label="{{ item_title }}"{% endif %}>{% if nav_icon %}<i data-feather="{{ nav_icon }}" aria-hidden="true"></i>{% endif %}{% if item_title != empty %} <span class="nav-link-label">{{ item_title }}</span>{% endif %}{% if is_external %}{% unless nav_icon %} <i data-feather="external-link" aria-hidden="true"></i>{% endunless %}{% endif %}</a>
+              {% else %}
+                <span class="nav-link"{% if item.nav_collapsed %} aria-label="{{ item_title }}"{% endif %}>{% if nav_icon %}<i data-feather="{{ nav_icon }}" aria-hidden="true"></i>{% endif %}{% if item_title != empty %} <span class="nav-link-label">{{ item_title }}</span>{% endif %}</span>
+              {% endif %}
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+
+      <form class="d-flex position-relative ms-auto mb-2 mb-md-0" role="search" onsubmit="return false;">
+        <input class="form-control me-2" type="search" id="search-input" placeholder="Search the docs" aria-label="Search the docs" autocomplete="off">
+        <ul class="search-results" id="search-results"></ul>
+      </form>
+
+      <button type="button" class="btn btn-ghost-dark px-2" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <i data-feather="moon" class="theme-toggle-icon theme-toggle-dark" aria-hidden="true"></i>
+        <i data-feather="sun" class="theme-toggle-icon theme-toggle-light" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,30 @@
+---
+---
+{% assign show_toc = page.toc | default: true %}
+<!doctype html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+  {% include head.html %}
+  <body>
+    {% include navbar.html %}
+
+    <main id="content" class="container-xl mt-4 mb-5 pb-5">
+      {% if show_toc %}{% include toc-mobile.html %}{% endif %}
+      <div class="row">
+        <div class="col-lg-3 col-xxl-2" id="toc-col">
+          {% if show_toc %}
+            {% include toc.html %}
+          {% endif %}
+        </div>
+        <div class="col-12 col-lg-9 col-xxl-10" id="main-col">
+          <article class="docs-content">
+            {{ content }}
+          </article>
+        </div>
+      </div>
+    </main>
+
+    {% include footer.html %}
+
+    {% include scripts.html %}
+  </body>
+</html>
