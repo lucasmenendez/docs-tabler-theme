@@ -14,7 +14,8 @@
 #   JEKYLL_VERSION    Jekyll version constraint                               [~> 4.3]
 #   EXTRA_CONFIG      optional extra Jekyll config file (rel. to repo root) to merge
 #   STATIC_PATH       static content to copy verbatim into the built site (single file or folder)
-#   STATIC_DEST       target path inside the built site (required with STATIC_PATH)
+#   STATIC_DEST       target folder inside the built site; a single file keeps its
+#                     basename, a folder's contents are copied in (required with STATIC_PATH)
 #   JEKYLL_TRACE      pass --trace to jekyll                                  [false]
 #   GITHUB_WORKSPACE  repo root on a runner                                   [pwd]
 #   RUNNER_TEMP       scratch space on a runner                               [mktemp]
@@ -191,7 +192,7 @@ if [ -n "$STATIC_PATH" ]; then
   fi
   if [ -f "$STATIC_ABS" ]; then
     mkdir -p "$OUT/$STATIC_DEST"
-    cp "$STATIC_ABS" "$OUT/$STATIC_DEST/index.html"
+    cp "$STATIC_ABS" "$OUT/$STATIC_DEST/$(basename "$STATIC_ABS")"
   elif [ -d "$STATIC_ABS" ]; then
     mkdir -p "$OUT/$STATIC_DEST"
     rsync -a "$STATIC_ABS"/ "$OUT/$STATIC_DEST"/

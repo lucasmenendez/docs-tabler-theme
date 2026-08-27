@@ -98,16 +98,17 @@ inputs:
   static-path:
     description: >-
       Path (relative to the repo root) to static content to publish verbatim —
-      either a single file (e.g. a self-contained index.html) or a folder of
-      assets. Copied into the built site at static-dest, e.g. to serve a
-      generated swagger UI under /api/.
+      either a single file (which keeps its basename) or a folder of assets.
+      Copied into the built site at static-dest, e.g. to serve a generated
+      swagger UI under /api/.
     required: false
     default: ""
 
   static-dest:
     description: >-
-      Target path inside the built site (e.g. api, served at /api/). Required
-      when static-path is set.
+      Target folder inside the built site (e.g. api, served at /api/). A single
+      static-path file is copied in with its basename; a folder's contents are
+      copied into it. Required when static-path is set.
     required: false
     default: ""
 
@@ -153,4 +154,4 @@ runs:
         STATIC_PATH: ${{ inputs.static-path }}
         STATIC_DEST: ${{ inputs.static-dest }}
         JEKYLL_TRACE: ${{ inputs.trace }}
-      run: ${{ github.action_path }}/build.sh
+      run: ${{ github.action_path }}/scripts/build.sh

@@ -1,0 +1,15 @@
+.git
+.github
+docs
+tmp
+.preview
+_site
+.jekyll-cache
+Dockerfile
+Makefile
+action.yml
+Gemfile
+Gemfile.lock
+scripts/build.sh
+scripts/debug-preview.sh
+scripts/preview.sh
