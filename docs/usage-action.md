@@ -80,8 +80,8 @@ Then enable **Settings → Pages → Source: GitHub Actions**.
 | `jekyll-version` | `~> 4.3`  | Jekyll version constraint. |
 | `output-path`    | `_site`   | Where the built site is written. |
 | `config`         | —         | Optional extra Jekyll config file (merged on top). |
-| `static-path`    | —         | Static content to publish verbatim: a single file (e.g. a self-contained `index.html`) or a folder of assets. Copied into the built site at `static-dest`. |
-| `static-dest`    | —         | Target path inside the built site (e.g. `api`, served at `/api/`). **Required when `static-path` is set.** |
+| `static-path`    | —         | Static content to publish verbatim: a single file (kept under its own basename) or a folder of assets. Copied into the built site at `static-dest`. |
+| `static-dest`    | —         | Target folder inside the built site (e.g. `api`, served at `/api/`); a single file keeps its basename. **Required when `static-path` is set.** |
 | `trace`          | `false`   | Pass `--trace` to Jekyll. |
 
 ## Outputs
@@ -117,7 +117,7 @@ Accepts `.ico`, `.png`, or `.svg`. If omitted, the theme's own logo is used as t
 
 ## Publish static content
 
-To serve generated static content alongside the docs (for example a swagger UI site), point `static-path` at it and give it a target path with `static-dest`. The files are copied **verbatim** into the built site after the Jekyll build — no Liquid processing, no search-index entry, no TOC/nav interference.
+To serve generated static content alongside the docs (for example a swagger UI site), point `static-path` at it and give it a target path with `static-dest`. The files are copied **verbatim** into the built site after the Jekyll build (no Liquid processing, no search-index entry, no TOC/nav interference).
 
 ```yaml
 - uses: lucasmenendez/docs-tabler-theme@main
@@ -128,19 +128,19 @@ To serve generated static content alongside the docs (for example a swagger UI s
     static-dest: api            # …served at /api/
 ```
 
-`static-path` accepts a single self-contained `index.html` file (copied as `<dest>/index.html`) or a folder (its contents copied into `<dest>/`). `static-dest` is required whenever `static-path` is set. Reference the result from your docs with the Jekyll URL filter:
+`static-path` accepts a single file (copied into `<dest>/` under its own basename, so `static-path: scripts/preview.sh` + `static-dest: sh` is served at `/sh/preview.sh`) or a folder (its contents copied into `<dest>/`). `static-dest` is required whenever `static-path` is set. Reference the result from your docs with the Jekyll URL filter:
 
 ```markdown
 [API reference]({{ '/api/' | relative_url }})
 ```
 
 {: .note }
-> The action normally checks out the repository itself (via the `checkout` input, default `true`), and that checkout would delete untracked generated files. When you generate static content before this step — as the swagger UI example does — set `checkout: false` so the files you created are kept.
+> The action normally checks out the repository itself (via the `checkout` input, default `true`), and that checkout would delete untracked generated files. When you generate static content before this step (as the swagger UI example does), set `checkout: false` so the files you created are kept.
 
 ## Local build (testing the action logic)
 
 ```bash
-CONTENT_PATH=docs THEME_PATH=. OUTPUT_PATH=/tmp/pages-out ./build.sh
+CONTENT_PATH=docs THEME_PATH=. OUTPUT_PATH=/tmp/pages-out ./scripts/build.sh
 ```
 
 ## Hosting this repo's own docs

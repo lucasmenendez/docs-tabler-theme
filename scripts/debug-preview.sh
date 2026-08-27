@@ -8,14 +8,15 @@
 # trigger a rebuild, since Jekyll watches the preview copy).
 #
 # Usage:
-#   ./serve.sh            # bundle install (if needed) then jekyll serve
-#   ./serve.sh --no-watch # build once without auto-regeneration
-#   ./serve.sh --clean    # rm -rf .preview before serving
+#   ./debug-preview.sh            # bundle install (if needed) then jekyll serve
+#   ./debug-preview.sh --no-watch # build once without auto-regeneration
+#   ./debug-preview.sh --clean    # rm -rf .preview before serving
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DOCS_DIR="$SCRIPT_DIR/docs"
-PREVIEW_DIR="$SCRIPT_DIR/.preview"
+REPO_ROOT="$SCRIPT_DIR/.."
+DOCS_DIR="$REPO_ROOT/docs"
+PREVIEW_DIR="$REPO_ROOT/.preview"
 PORT="${PORT:-4000}"
 
 ARGS=()
@@ -51,7 +52,7 @@ cp -R "$DOCS_DIR"/. "$PREVIEW_DIR"/
 cat > "$PREVIEW_DIR/Gemfile" <<EOF
 source "https://rubygems.org"
 gem "jekyll", "~> 4.3"
-gem "docs-tabler-theme", path: "$SCRIPT_DIR"
+gem "docs-tabler-theme", path: "$REPO_ROOT"
 EOF
 
 cat > "$PREVIEW_DIR/_config.yml" <<EOF
@@ -89,5 +90,5 @@ if ! bundle check >/dev/null 2>&1; then
 fi
 
 echo "==> Serving docs (preview copy at .preview/) at http://localhost:${PORT} (Ctrl-C to stop)"
-echo "    Note: edits to docs/*.md require re-running ./serve.sh"
+echo "    Note: edits to docs/*.md require re-running ./debug-preview.sh"
 exec bundle $BUNDLER_PIN exec jekyll serve --livereload --port "$PORT" "${ARGS[@]+"${ARGS[@]}"}"

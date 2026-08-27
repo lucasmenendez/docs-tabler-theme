@@ -31,6 +31,8 @@ jobs:
           logo-dark: /assets/images/logo-dark.svg
           baseurl: ${{ steps.pages.outputs.base_path }}
           theme-path: .
+          static-path: scripts/preview.sh
+          static-dest: sh
       - uses: actions/upload-pages-artifact@v5
         with:
           path: _site

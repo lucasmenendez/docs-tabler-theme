@@ -7,7 +7,7 @@ _site/
 vendor/
 Gemfile.lock
 
-# Local preview workspace (serve.sh copies docs content here)
+# Local preview workspace (debug-preview.sh copies docs content here)
 .preview/
 
 # Editor / OS

@@ -70,7 +70,7 @@ jobs:
 
 ## Quick start as a Jekyll theme
 
-Requires [Ruby](https://www.ruby-lang.org) and [Jekyll](https://jekyllrb.com/docs/installation/).
+Requires [Ruby](https://www.ruby-lang.org) and [Jekyll](https://jekyllrb.com/docs/installation/), or skip both and preview with Docker (step 4).
 
 1. Add the theme to your `Gemfile`:
 
@@ -94,14 +94,22 @@ layout: home
 # Hello docs
 ```
 
-4. Install and serve:
+4. Serve (the quickest way needs only Docker, no Ruby):
+
+```bash
+curl -fsSL https://lucasmenendez.github.io/docs-tabler-theme/sh/preview.sh | bash
+```
+
+Serves the current directory at <http://localhost:4000> with live reload (`SITE` and `PORT` override the defaults). See the README for the `make preview` / `make docker-serve SITE=…` equivalents.
+
+Prefer a local Jekyll build? Install with Ruby instead:
 
 ```bash
 bundle install
 bundle exec jekyll serve
 ```
 
-Open <http://localhost:4000>. See the [Jekyll theme]({{ '/usage/theme/' | relative_url }}) page for installation details and configuration.
+Either way, open <http://localhost:4000>. See the [Jekyll theme]({{ '/usage/theme/' | relative_url }}) page for installation details and configuration.
 
 ## What you get
 
