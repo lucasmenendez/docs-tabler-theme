@@ -278,10 +278,131 @@
     feather.replace();
   }
 
+  /* ---------- Copy button on code blocks ---------- */
+  /* Injects a small "copy" button into each code block (.highlight or a plain
+     <pre>). Copies the code text only; line-numbered Rouge tables keep the
+     numbers in the gutter cell, so we copy just the code cell. */
+  function initCopyButtons() {
+    var blocks = Array.prototype.slice.call(
+      document.querySelectorAll(".docs-content .highlight, .docs-content > pre")
+    );
+    if (blocks.length === 0) { return; }
+
+    blocks.forEach(function (block) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "code-copy-btn";
+      btn.setAttribute("aria-label", "Copy code");
+      btn.title = "Copy code";
+
+      var icon = document.createElement("i");
+      icon.setAttribute("data-feather", "copy");
+      icon.setAttribute("aria-hidden", "true");
+      btn.appendChild(icon);
+
+      btn.addEventListener("click", function () {
+        var target = block.querySelector("table.rouge-table td.code")
+          || block.querySelector("pre")
+          || block;
+        /* Copy from a clone so the injected button (a child of the block for
+           plain <pre> blocks) never ends up in the copied text. */
+        var clone = target.cloneNode(true);
+        var btnInClone = clone.querySelector(".code-copy-btn");
+        if (btnInClone) { btnInClone.remove(); }
+        var text = clone.textContent.replace(/\n$/, "");
+
+        function done() {
+          btn.classList.add("copied");
+          var label = document.createElement("span");
+          label.textContent = "Copied";
+          btn.appendChild(label);
+          setTimeout(function () {
+            btn.classList.remove("copied");
+            label.remove();
+          }, 1500);
+        }
+
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text).then(done, function () {
+            fallbackCopy(text, done);
+          });
+        } else {
+          fallbackCopy(text, done);
+        }
+      });
+
+      block.insertBefore(btn, block.firstChild);
+    });
+
+    if (typeof feather !== "undefined") {
+      feather.replace();
+    }
+  }
+
+  function fallbackCopy(text, onSuccess) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "absolute";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      if (document.execCommand("copy")) {
+        onSuccess();
+      }
+    } catch (e) {
+      /* clipboard write failed; ignore */
+    }
+    document.body.removeChild(ta);
+  }
+
+  /* ---------- Ordered list continuation ---------- */
+  /* kramdown splits an ordered list when an item contains an unindented code
+     block or callout: the following number becomes a new <ol> starting at 1.
+     Detect a list preceded by a code/callout block that follows another list
+     and carry the numbering forward with the start attribute. */
+  function fixListIndices() {
+    var lists = Array.prototype.slice.call(
+      document.querySelectorAll(".docs-content ol")
+    );
+    lists.forEach(function (ol) {
+      var inter = ol.previousElementSibling;
+      if (!inter) { return; }
+      /* kramdown GFM wraps fenced blocks in <div class="language-* 
+         highlighter-rouge"><div class="highlight"><pre>. The interrupting
+         sibling is that outer wrapper; if we land on an inner <pre>, climb
+         to its code-block wrapper so prev resolves to the preceding <ol>. */
+      var block = inter;
+      if (block.tagName === "PRE" && block.parentElement) {
+        var wrap = block.parentElement;
+        if (
+          wrap.matches(".highlight, .highlighter-rouge, [class*='language-']")
+        ) {
+          block = wrap;
+        }
+      }
+      if (
+        !block.matches(
+          ".highlight, .highlighter-rouge, [class*='language-'], " +
+          "pre, blockquote, figure, table"
+        )
+      ) {
+        return;
+      }
+      var prev = block.previousElementSibling;
+      if (!prev || prev.tagName !== "OL") { return; }
+      var start = parseInt(prev.getAttribute("start") || "1", 10);
+      ol.setAttribute("start", start + prev.children.length);
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initFeather();
     buildToc();
     initSearch();
     initThemeToggle();
+    initCopyButtons();
+    fixListIndices();
   });
 })();

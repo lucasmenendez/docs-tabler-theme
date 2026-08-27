@@ -415,6 +415,77 @@ footer.container-xl {
   overflow-x: auto;
 }
 
+/* --- Text selection inside code ---
+   Tabler's global ::selection is a 10% primary tint that is nearly invisible
+   on the always-dark code background. ::selection is resolved per element, so
+   selected text in a code block lives in <code> and its token <span>s, not the
+   <pre> itself: cover the whole pre subtree with a visible light-on-dark bar
+   (works in both color schemes), and give inline <code> (outside pre) a solid
+   primary inversion (black/white), scoped so general prose selection stays
+   Tabler's default. */
+.docs-content code::selection {
+  background-color: var(--tblr-primary);
+  color: var(--tblr-primary-fg);
+}
+
+.docs-content pre::selection,
+.docs-content pre code::selection,
+.docs-content pre code *::selection {
+  /* Plain rgba fallback for browsers without color-mix() support, where the
+     declaration below would otherwise be dropped entirely. */
+  background-color: rgba(230, 237, 243, 0.35);
+  background-color: color-mix(in srgb, var(--docs-code-fg) 30%, transparent);
+  color: var(--docs-code-fg);
+}
+
+/* --- Copy button on code blocks ---
+   Injected by theme.js into each .highlight / plain pre. Anchored to the top
+   right of the block; lives outside the <pre> so it is never part of the
+   copied or selected code. */
+.docs-content .highlight,
+.docs-content > pre {
+  position: relative;
+}
+
+.code-copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--docs-code-fg);
+  background-color: color-mix(in srgb, var(--docs-code-bg) 85%, transparent);
+  border: var(--tblr-border-width) solid
+    color-mix(in srgb, var(--docs-code-fg) 30%, transparent);
+  border-radius: var(--tblr-border-radius);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
+  z-index: 1;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.code-copy-btn:hover,
+.code-copy-btn:focus-visible {
+  opacity: 1;
+}
+
+.code-copy-btn .feather {
+  width: 0.875em;
+  height: 0.875em;
+}
+
+.code-copy-btn.copied {
+  color: var(--tblr-success-fg, #fff);
+  border-color: var(--tblr-success, #2fb344);
+  background-color: var(--tblr-success, #2fb344);
+}
+
 .docs-content table {
   width: 100%;
   margin-bottom: 1rem;
