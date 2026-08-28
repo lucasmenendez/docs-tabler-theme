@@ -1,13 +1,13 @@
-<header class="navbar navbar-expand-md fixed-top d-print-none" style="background-color: var(--tblr-bg-surface); border-bottom: var(--tblr-border-width) solid var(--tblr-border-color-translucent);">
+<header class="navbar navbar-expand-md fixed-top d-print-none docs-navbar">
   <div class="container-xl">
     <a class="navbar-brand d-flex align-items-center" href="{{ '/' | relative_url }}">
       {% if site.logo %}
-        <img src="{{ site.logo | relative_url }}" alt="{{ site.title }}" width="24" height="24" class="navbar-logo navbar-logo-light me-2">
+        <img src="{{ site.logo | relative_url }}" alt="{{ site.title }}" class="navbar-logo navbar-logo-light">
       {% endif %}
       {% if site.logo_dark %}
-        <img src="{{ site.logo_dark | relative_url }}" alt="{{ site.title }}" width="24" height="24" class="navbar-logo navbar-logo-dark me-2">
+        <img src="{{ site.logo_dark | relative_url }}" alt="{{ site.title }}" class="navbar-logo navbar-logo-dark">
       {% endif %}
-      <span class="fw-bold">{{ site.title }}</span>
+      <span class="fw-bold navbar-title">{{ site.title }}</span>
     </a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-main" aria-controls="navbar-main" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,7 +98,8 @@
       </ul>
 
       <form class="d-flex position-relative ms-auto mb-2 mb-md-0" role="search" onsubmit="return false;">
-        <input class="form-control me-2" type="search" id="search-input" placeholder="Search the docs" aria-label="Search the docs" autocomplete="off">
+        <i data-feather="search" class="search-icon" aria-hidden="true"></i>
+        <input class="form-control me-2" type="search" id="search-input" placeholder="Search documentation" aria-label="Search the documentation" autocomplete="off">
         <ul class="search-results" id="search-results"></ul>
       </form>
 

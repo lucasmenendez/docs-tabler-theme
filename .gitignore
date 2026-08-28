@@ -1,6 +1,7 @@
 # Build output (the action writes to _site/ by default)
 _site/
 .jekyll-cache/
+tmp/
 
 # Bundler
 .bundle/

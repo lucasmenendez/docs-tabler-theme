@@ -1,7 +1,7 @@
 ---
 title: Use as a GitHub Action
 layout: default
-permalink: /usage/action/
+permalink: /docs/usage/action/
 nav_title: GitHub Action
 nav_level: 2
 nav_parent: Docs

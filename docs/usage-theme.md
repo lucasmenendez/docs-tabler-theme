@@ -1,7 +1,7 @@
 ---
 title: Use as a Jekyll theme
 layout: default
-permalink: /usage/theme/
+permalink: /docs/usage/theme/
 nav_title: Jekyll theme
 nav_level: 2
 nav_parent: Docs

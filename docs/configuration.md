@@ -1,7 +1,7 @@
 ---
 title: Configuration
 layout: default
-permalink: /configuration/
+permalink: /docs/configuration/
 nav_title: Configuration
 nav_level: 2
 nav_parent: Docs

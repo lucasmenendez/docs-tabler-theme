@@ -1,7 +1,7 @@
 ---
 title: HTML components
 layout: default
-permalink: /html/
+permalink: /docs/html/
 nav_title: HTML components
 nav_level: 2
 nav_parent: Docs

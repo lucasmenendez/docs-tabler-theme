@@ -1,7 +1,7 @@
 ---
 title: Markdown components
 layout: default
-permalink: /markdown/
+permalink: /docs/markdown/
 nav_title: Markdown components
 nav_level: 2
 nav_parent: Docs
