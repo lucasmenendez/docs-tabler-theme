@@ -103,10 +103,12 @@
         <ul class="search-results" id="search-results"></ul>
       </form>
 
+      {% if site.theme_mode != 'light' and site.theme_mode != 'dark' %}
       <button type="button" class="btn btn-ghost-dark px-2" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
         <i data-feather="moon" class="theme-toggle-icon theme-toggle-dark" aria-hidden="true"></i>
         <i data-feather="sun" class="theme-toggle-icon theme-toggle-light" aria-hidden="true"></i>
       </button>
+      {% endif %}
     </div>
   </div>
 </header>

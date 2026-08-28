@@ -19,8 +19,16 @@
   <link rel="stylesheet" href="{{ '/assets/css/theme.css' | relative_url }}?v={{ site.time | date: '%s' }}">
   <script>
     (function () {
-      var stored = localStorage.getItem("tblr-theme");
-      var theme = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      var mode = "{{ site.theme_mode | default: 'both' }}";
+      var theme;
+      if (mode === "light") {
+        theme = "light";
+      } else if (mode === "dark") {
+        theme = "dark";
+      } else {
+        var stored = localStorage.getItem("tblr-theme");
+        theme = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      }
       document.documentElement.setAttribute("data-bs-theme", theme);
     })();
   </script>

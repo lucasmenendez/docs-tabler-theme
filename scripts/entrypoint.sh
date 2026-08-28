@@ -8,15 +8,22 @@
 #
 # Environment:
 #   SITE              path to the mounted content folder        [/site]
+#   THEME             color theme mode: both, light, or dark    [both]
 #   PORT              Jekyll serve port                         [4000]
 #   LIVERELOAD_PORT   live reload websocket port                [35729]
 #   TITLE             site title shown in the navbar            [Docs]
 set -euo pipefail
 
 SITE="${SITE:-/site}"
+THEME="${THEME:-both}"
 PORT="${PORT:-4000}"
 LIVERELOAD_PORT="${LIVERELOAD_PORT:-35729}"
 TITLE="${TITLE:-Docs}"
+
+case "$THEME" in
+  both|light|dark) ;;
+  *) echo "error: THEME must be one of: both, light, dark (got: $THEME)" >&2; exit 1 ;;
+esac
 
 if [ ! -d "$SITE" ]; then
   echo "::error::content folder not found: $SITE (mount it with -v \$PWD:/site)" >&2
@@ -36,6 +43,7 @@ EOF
 cat > "$WORK/_config.yml" <<EOF
 title: $TITLE
 theme: docs-tabler-theme
+theme_mode: $THEME
 
 collections:
   nav:

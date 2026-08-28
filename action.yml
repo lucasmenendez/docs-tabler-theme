@@ -56,6 +56,14 @@ inputs:
     required: false
     default: ""
 
+  theme:
+    description: >-
+      Color theme mode: "both" (default) shows a navbar toggle to switch
+      between light and dark, "light" fixes the site to light mode, and
+      "dark" fixes it to dark mode. Fixed modes hide the toggle.
+    required: false
+    default: "both"
+
   baseurl:
     description: >-
       Base URL for the site. For a GitHub Pages project site, pass the base
@@ -145,6 +153,7 @@ runs:
         SITE_LOGO: ${{ inputs.logo }}
         SITE_LOGO_DARK: ${{ inputs.logo-dark }}
         SITE_FAVICON: ${{ inputs.favicon }}
+        THEME: ${{ inputs.theme }}
         SITE_BASEURL: ${{ inputs.baseurl }}
         THEME_PATH: ${{ inputs.theme-path || github.action_path }}
         RUBY_VERSION: ${{ inputs.ruby-version }}

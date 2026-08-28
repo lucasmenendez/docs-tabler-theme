@@ -62,6 +62,7 @@ logo: /assets/images/logo.svg
 logo_dark: /assets/images/logo-dark.svg
 favicon: /assets/images/logo.svg
 theme: docs-tabler-theme
+theme_mode: both
 
 collections:
   nav:

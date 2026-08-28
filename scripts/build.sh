@@ -9,6 +9,7 @@
 #   SITE_DESCRIPTION  meta description
 #   SITE_LOGO         logo path relative to the built site root
 #   SITE_LOGO_DARK    dark-mode logo path relative to the built site root
+#   THEME             color theme mode: both (toggle), light, or dark         [both]
 #   SITE_BASEURL      base URL (e.g. /repo-name for project pages)
 #   THEME_PATH        local path to the theme gem (testing; else TEMP/theme)
 #   JEKYLL_VERSION    Jekyll version constraint                               [~> 4.3]
@@ -39,6 +40,7 @@ SITE_DESCRIPTION="${SITE_DESCRIPTION:-}"
 SITE_LOGO="${SITE_LOGO:-}"
 SITE_LOGO_DARK="${SITE_LOGO_DARK:-}"
 SITE_FAVICON="${SITE_FAVICON:-}"
+THEME="${THEME:-both}"
 SITE_BASEURL="${SITE_BASEURL:-}"
 THEME_PATH="${THEME_PATH:-}"
 JEKYLL_VERSION="${JEKYLL_VERSION:-~> 4.3}"
@@ -46,6 +48,11 @@ EXTRA_CONFIG="${EXTRA_CONFIG:-}"
 STATIC_PATH="${STATIC_PATH:-}"
 STATIC_DEST="${STATIC_DEST:-}"
 JEKYLL_TRACE="${JEKYLL_TRACE:-false}"
+
+case "$THEME" in
+  both|light|dark) ;;
+  *) echo "::error::theme must be one of: both, light, dark (got: $THEME)" >&2; exit 1 ;;
+esac
 
 SRC="$(mktemp -d)/src"
 OUT="$(mktemp -d)/out"
@@ -91,6 +98,7 @@ CONFIG_THEME="$SRC/_config.theme.yml"
 cat > "$CONFIG_THEME" <<EOF
 title: $SITE_TITLE
 theme: docs-tabler-theme
+theme_mode: $THEME
 collections:
   nav:
     output: false

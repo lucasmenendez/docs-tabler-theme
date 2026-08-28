@@ -4,6 +4,10 @@
 title: Docs
 description: Documentation built with the docs-tabler-theme.
 
+# Color theme mode: `both` shows a navbar toggle (light/dark), `light` or
+# `dark` fix the site to that scheme and hide the toggle.
+theme_mode: both
+
 # Logo paths relative to site root. Omit to show only the title.
 # `logo` is shown in light mode; `logo_dark` (optional) replaces it in dark
 # mode via the theme toggle. If logo_dark is omitted, logo is used in both.

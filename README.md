@@ -1,6 +1,6 @@
 # docs-tabler-theme
 
-A [Jekyll](https://jekyllrb.com) documentation theme built on [Tabler](https://tabler.io) v1.4, with a fixed responsive navbar, dropdown navigation, site search, a sticky table of contents, dark mode, and syntax-highlighted code blocks.
+A [Jekyll](https://jekyllrb.com) documentation theme built on [Tabler](https://tabler.io) v1.4, with a fixed responsive navbar, dropdown navigation, site search, a sticky table of contents, light/dark theming (toggle or fixed), and syntax-highlighted code blocks.
 
 It also ships as a **composite GitHub Action** that builds a Jekyll site from a bare Markdown folder, so a consuming repo needs no Gemfile, no `_config.yml`, and no Ruby knowledge.
 

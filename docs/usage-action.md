@@ -74,6 +74,7 @@ Then enable **Settings → Pages → Source: GitHub Actions**.
 | `logo`           | —         | Light-mode logo path relative to the built site root. |
 | `logo-dark`      | —         | Dark-mode logo path (optional; if omitted, `logo` is used in both modes). |
 | `favicon`        | —         | Favicon path relative to the built site root (`.ico`, `.png`, or `.svg`); defaults to the theme's logo.svg. |
+| `theme`          | `both`    | Color theme mode: `both` (default) shows a navbar toggle between light and dark, `light` and `dark` fix the site to that scheme and hide the toggle. |
 | `baseurl`        | —         | Base URL (`base_path` from the configure-pages step for project sites; empty for user pages). |
 | `theme-path`     | —         | Local theme path (testing or self-hosting, e.g. `.`); when empty the action builds with its own files, so the theme always matches the action version. |
 | `ruby-version`   | `3.1`     | Ruby version for the build. |
@@ -114,6 +115,19 @@ Put a favicon anywhere inside your `content-path` folder and pass its path to re
 ```
 
 Accepts `.ico`, `.png`, or `.svg`. If omitted, the theme's own logo is used as the favicon.
+
+## Theme
+
+Control the color scheme with the `theme` input:
+
+```yaml
+- uses: lucasmenendez/docs-tabler-theme@main
+  with:
+    content-path: docs
+    theme: dark    # both (default), light, or dark
+```
+
+With `both` (the default) a light/dark toggle is shown in the navbar and the visitor's choice is remembered in `localStorage` (falling back to their OS preference). With `light` or `dark` the site is fixed to that scheme and the toggle is hidden.
 
 ## Publish static content
 

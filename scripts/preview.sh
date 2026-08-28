@@ -9,11 +9,13 @@
 # Usage:
 #   ./preview.sh                      # serve $PWD
 #   SITE=/path/to/docs ./preview.sh   # serve a specific folder
+#   THEME=dark ./preview.sh           # fixed dark mode (both/light/dark)
 #   PORT=8080 ./preview.sh            # serve on another port
 #   LIVERELOAD_PORT=35729 ./preview.sh  # live reload on another port
 set -euo pipefail
 
 SITE="${SITE:-$PWD}"
+THEME="${THEME:-both}"
 PORT="${PORT:-4000}"
 LIVERELOAD_PORT="${LIVERELOAD_PORT:-35729}"
 TITLE="${TITLE:-Docs}"
@@ -35,6 +37,7 @@ docker run \
   -p "${PORT}:4000" \
   -p "${LIVERELOAD_PORT}:35729" \
   -e "TITLE=$TITLE" \
+  -e "THEME=$THEME" \
   -e "LIVERELOAD_PORT=$LIVERELOAD_PORT" \
   -v "$SITE:/site" \
   "$IMAGE"

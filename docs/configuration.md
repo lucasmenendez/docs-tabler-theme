@@ -115,6 +115,19 @@ layout: search
 
 The `search` layout emits a JSON index over `site.pages` and `site.posts`. The navbar search form queries it client-side. When using the GitHub Action, this file is generated automatically if missing.
 
+## Theme (light/dark)
+
+Set `theme_mode` in `_config.yml`:
+
+```yaml
+theme_mode: both   # both (default), light, or dark
+```
+
+- `both` — the navbar shows a light/dark toggle. The visitor's choice is remembered in `localStorage`, falling back to their OS `prefers-color-scheme`.
+- `light` or `dark` — the site is fixed to that scheme and the toggle is hidden.
+
+When using the GitHub Action, pass the `theme` input instead (same values).
+
 ## Page front matter
 
 - Layouts: `home` (index), `default`, `page`.
